@@ -2,27 +2,41 @@ import React, { useState,useEffect } from "react";
 import styles from './quizapp.module.css'
 import { questions } from "../Atoms/questionlist";
 export function  QuizApplication(){
-  // Properties
-  const [showResults, setShowResults] = useState(false);   //showresults=false
-  const [currentQuestion, setCurrentQuestion] = useState(0); //currentquestion=0
+ 
+  const [showResults, setShowResults] = useState(false);  
+  const [currentQuestion, setCurrentQuestion] = useState(0); 
   const [score, setScore] = useState(0);  //score=0
-  const [timeLeft,setTimeLeft]=useState(100)
+  const [timeLeft,setTimeLeft]=useState(600)
+  const [color,setColor]=useState(null)
+  
 
-  // Helper Functions
-
-  /* A possible answer was clicked */
-  const optionClicked = (isCorrect) => {
-    // Increment the score
-    if (isCorrect) {
+  
+  const optionClicked = (option) => {
+    setColor(option)
+    if (option.isCorrect) {
       setScore(score + 1);
     }
+   
+    
+  };
+
+  const prevQuestion=()=>{
+    if (currentQuestion + 1 > 1) {
+      setCurrentQuestion(currentQuestion-1);
+    } else {
+      if(currentQuestion<1){
+        setCurrentQuestion(currentQuestion+1)
+      }
+    }
+  }
+
+  const nextQuestion=()=>{
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       setShowResults(true);
     }
-    
-  };
+  }
 
   //timer function
   useEffect(() => {
@@ -33,9 +47,9 @@ export function  QuizApplication(){
 
 useEffect(() => {
     if(timeLeft === 0) {
-        //write the code to stop the timer .
+        
         setShowResults(true)
-        // submit the quiz 
+       setTimeLeft(600)
     }
 } ,[timeLeft])
 
@@ -91,19 +105,24 @@ function getRedableTimeFormat () {
 
           {/* List of possible answers  */}
           <ul>
-            {questions[currentQuestion].options.map((option) => {  //questions[0].options.map
+            {questions[currentQuestion].options.map((option) => {  
               return (
                 <li
                   key={option.id}
-                  onClick={() => optionClicked(option.isCorrect) }
+                  onClick={() => optionClicked(option) }
+                  className={option===color?styles.color:""}
                 >
                   {option.text}
                 </li>
               );
             })}
+          
             
           </ul>
-          
+          <div className={styles.btn}>
+            <button onClick={prevQuestion}>Previous</button>
+          <button onClick={nextQuestion}>{currentQuestion+1<questions.length?"Next":"Submit"}</button>
+          </div>
         
         </div>
       )}

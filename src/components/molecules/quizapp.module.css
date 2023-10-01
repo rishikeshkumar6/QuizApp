@@ -90,3 +90,14 @@
     left: 15rem;
     font-size: 1rem;
   }
+
+  .btn{
+    display: flex;
+    width: 50vw;
+    justify-content: space-between;
+    
+  }
+
+  .color{
+    background-color: goldenrod;
+  }
